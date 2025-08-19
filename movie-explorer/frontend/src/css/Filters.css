@@ -1,0 +1,42 @@
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem auto;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #121212;
+  border-radius: 10px;
+  max-width: 1000px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  color: #ff64b4;
+}
+
+.filter-group label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+  width: 160px;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #ff64b4;
+  box-shadow: 0 0 4px #ff64b4;
+}

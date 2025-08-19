@@ -1,0 +1,68 @@
+body {
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Targets <textarea> elements that also have the class form-control (commonly used in Bootstrap).
+resize: none; → Prevents users from resizing the textarea.*/
+textarea.form-control {
+  resize: none;
+  font-size: 1rem;
+   width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/*Border-radius: Rounded corners */
+.note-box {
+  background: #fff;
+  border-left: 5px solid #007bff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/*margin: 0; → Removes default paragraph spacing
+white-space: pre-wrap; → Preserves spaces and line breaks from user input (like how text appears in a <textarea>), while still allowing wrapping. */
+.note-box p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Form button styling */
+button.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+button.btn-success:hover {
+  background-color: #218838;
+}
+
+a.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-left: 10px;
+}
+
+a.btn-secondary:hover {
+  background-color: #5a6268;
+}
