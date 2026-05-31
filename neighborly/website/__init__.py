@@ -23,7 +23,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
 
     #define classes before creating database 
-    from .models import User, Note
+    from .models import User, Post, Tag
 
     create_database(app)
 

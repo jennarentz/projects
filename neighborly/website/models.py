@@ -26,7 +26,7 @@ class Post(db.Model):
     #contact
     instagram_url = db.Column(db.String(300)) #club/event page
     group_chat_url = db.Column(db.String(300)) #group chat access
-    contact_email   = db.Column(db.String(150)) #email for who posted
+    contact_email = db.Column(db.String(150)) #email for who posted
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     #associate post with user
@@ -45,16 +45,16 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     #adds post id into user's post relationship (like a list)
-    posts = db.relationship('Note')
+    posts = db.relationship('Post')
 
     #add profile for users
     username = db.Column(db.String(50), unique=True)
     bio = db.Column(db.Text)
     #social links
-    instagram_url   = db.Column(db.String(300))
-    tiktok_url      = db.Column(db.String(300))
-    twitter_url     = db.Column(db.String(300))
-    website_url     = db.Column(db.String(300))
+    instagram_url = db.Column(db.String(300))
+    tiktok_url = db.Column(db.String(300))
+    twitter_url = db.Column(db.String(300))
+    website_url = db.Column(db.String(300))
 
 
 class Tag(db.Model):
