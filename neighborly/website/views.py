@@ -1,56 +1,101 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Post, Tag
 from . import db
 import json
 
 #creates a new page
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
-@login_required
+#now only looking at the board (creating a post should be separate)
+@views.route('/', methods=['GET'])
 def home():
-    if request.method == 'POST':
-        note = request.form.get('note')
-        if len(note) < 1:
-            flash('Note is too short!', category='error')
-        else:
-            new_note = Note(text=note, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-    return render_template("home.html", user=current_user)
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template("home.html", user=current_user, posts=posts, tags=tags)
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    note = json.loads(request.data)
-    noteId = note['noteId']
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
+#create new post
+@views.route('/create', methods=['GET', 'POST'])
+def create_post():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        body = request.form.get('body')
+        category = request.form.get('category')
+        location_city = request.form.get('location_city')
+        location_zip = request.form.get('location_zip')
+        location_name = request.form.get('location_name')
+        event_date = request.form.get('event_date') or None
+        event_day = request.form.get('event_day')
+        event_time = request.form.get('event_time') or None
+        is_recurring = request.form.get('is_recurring') == 'on'
+        instagram_url = request.form.get('instagram_url')
+        group_chat_url = request.form.get('group_chat_url')
+        contact_email = request.form.get('contact_email')
+        tag_names = request.form.get('tags', '').split(',')
+    if len(title) < 2:
+        flash('Title is too short.', category='error')
+    else:
+        new_post = Post(title=title, 
+                        body=body, 
+                        category=category,
+                        location_city=location_city, 
+                        location_zip=location_zip,
+                        location_name=location_name, 
+                        event_date=event_date,
+                        event_day=event_day, 
+                        event_time=event_time,
+                        is_recurring=is_recurring, 
+                        instagram_url=instagram_url,
+                        group_chat_url=group_chat_url, 
+                        contact_email=contact_email,
+                        user_id=current_user.id)
+        #look up tags to see if included
+        for name in tag_names:
+            name = name.strip().lower()
+            if name:
+                tag = Tag.query.filter_by(name=name).first()
+            if not tag:
+                tag = Tag(name=name)
+                db.session.add(tag)
+                new_post.tags.append(tag)
+        db.session.add(new_post)
+        db.session.commit()
+        flash('Post created!', category='success')
+
+    return render_template('create.html', user=current_user)
+
+@views.route('/delete-post', methods=['POST'])
+@login_required
+def delete_post():
+    data = json.loads(request.data)
+    postId = data['postId']
+    post = Post.query.get(postId)
+    if post and post.user_id == current_user.id:
+        db.session.delete(post)
+        db.session.commit()
     #turn empty python into json object to return 
     return jsonify({})
 
 @views.route('/edit-note/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_note(id):
+def edit_post(id):
     #looks up note by id to make sure it exists
-    note = Note.query.get_or_404(id)
+    post = Post.query.get_or_404(id)
 
-    if note.user_id != current_user.id:
+    if post.user_id != current_user.id:
         flash("You are not authorized to edit this note.", category='error')
 
-    #submitted form to edit note
+    #submitted form to edit post
     if request.method == 'POST':
-        new_text = request.form.get('note')
-        if len(new_text) < 1:
-            flash("Note can't be empty.", category='error')
-        else:
-            note.text = new_text
-            db.session.commit()
-            flash("Note updated!", category='success')
+        post.title = request.form.get('title')
+        post.body = request.form.get('body')
+        post.category = request.form.get('category')
+        post.location_city = request.form.get('location_city')
+        post.location_zip = request.form.get('location_zip')
+        post.instagram_url = request.form.get('instagram_url')
+        post.group_chat_url = request.form.get('group_chat_url')
+        db.session.commit()
+        flash("Post updated!", category='success')
 
-    return render_template('edit_note.html', user=current_user, note=note)
+    return render_template('edit_post.html', user=current_user, post=post)
 
