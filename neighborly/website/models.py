@@ -37,6 +37,26 @@ class Post(db.Model):
     author = db.relationship('User', backref='posts')
     tags = db.relationship('Tag', secondary='post_tags', backref='posts')
 
+    def to_dict(self):
+        return {
+            'id':           self.id,
+            'title':        self.title,
+            'body':         self.body,
+            'category':     self.category,
+            'location_city': self.location_city,
+            'location_zip':  self.location_zip,
+            'location_name': self.location_name,
+            'event_date':   self.event_date.isoformat() if self.event_date else None,
+            'event_day':    self.event_day,
+            'event_time':   str(self.event_time) if self.event_time else None,
+            'is_recurring': self.is_recurring,
+            'instagram_url': self.instagram_url,
+            'group_chat_url': self.group_chat_url,
+            'tags':         [t.name for t in self.tags],
+            'author':       self.author.username or self.author.first_name,
+            'created_at':   self.created_at.isoformat(),
+        }
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
