@@ -43,3 +43,12 @@ def create_database(app):
     with app.app_context():
         db.create_all()
         print('Created Database!')
+
+        from .models import Tag
+        default_tags = ['free', 'outdoor', 'indoor', 'family-friendly',
+                        '18+', 'sports', 'music', 'food', 'fitness',
+                        'arts', 'volunteering', 'weekly', 'one-time']
+        for name in default_tags:
+            if not Tag.query.filter_by(name=name).first():
+                db.session.add(Tag(name=name))
+        db.session.commit()
