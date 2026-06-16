@@ -1,68 +1,656 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+/* ── Design tokens ───────────────────────────────────────── */
+:root {
+  --cream:        #faf7f2;
+  --warm-brown:   #5c3d2e;
+  --soft-orange:  #e8845a;
+  --muted-green:  #7a9e7e;
+  --dusty-rose:   #c9857a;
+  --light-tan:    #ede8df;
+  --text-dark:    #2c2118;
+  --text-mid:     #7a6a5a;
+
+  --radius-sm:    8px;
+  --radius-md:    14px;
+  --radius-pill:  20px;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
 body {
-  background-color: #f0f2f5;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  background-color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
   margin: 0;
   padding: 0;
 }
 
-/* Targets <textarea> elements that also have the class form-control (commonly used in Bootstrap).
-resize: none; → Prevents users from resizing the textarea.*/
+/* ── Typography ──────────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: 'Lora', serif;
+  color: var(--warm-brown);
+}
+
+/* ── Forms ───────────────────────────────────────────────── */
 textarea.form-control {
-  resize: none;
-  font-size: 1rem;
-   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  resize: vertical;
+  font-size: 0.95rem;
+  font-family: 'DM Sans', sans-serif;
+  width: 100%;
+  min-height: 100px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-sm);
+  background: var(--cream);
+  color: var(--text-dark);
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+textarea.form-control:focus {
+  border-color: var(--soft-orange);
+  box-shadow: none;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.8rem;
+  width: 100%;
+  background: var(--cream);
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.15s;
   box-sizing: border-box;
 }
 
-/*Border-radius: Rounded corners */
-.note-box {
-  background: #fff;
-  border-left: 5px solid #007bff;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+input:focus,
+select:focus {
+  border-color: var(--soft-orange);
+  box-shadow: none;
 }
 
-/*margin: 0; → Removes default paragraph spacing
-white-space: pre-wrap; → Preserves spaces and line breaks from user input (like how text appears in a <textarea>), while still allowing wrapping. */
-.note-box p {
+label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+button.btn,
+a.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1.3rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Primary — post/submit */
+.btn-primary,
+button.btn-primary {
+  background-color: var(--soft-orange);
+  color: white;
+  border: none;
+}
+.btn-primary:hover,
+button.btn-primary:hover {
+  background-color: var(--warm-brown);
+  color: white;
+}
+
+/* Success */
+button.btn-success {
+  background-color: var(--muted-green);
+  color: white;
+}
+button.btn-success:hover {
+  background-color: #5a8460;
+  color: white;
+}
+
+/* Secondary / cancel */
+a.btn-secondary,
+button.btn-secondary {
+  background-color: white;
+  color: var(--text-mid);
+  border: 1.5px solid var(--light-tan);
+}
+a.btn-secondary:hover,
+button.btn-secondary:hover {
+  border-color: var(--soft-orange);
+  color: var(--soft-orange);
+  text-decoration: none;
+}
+
+/* Danger / delete */
+button.btn-danger {
+  background-color: white;
+  color: #c0392b;
+  border: 1.5px solid #f5c6c6;
+  border-radius: var(--radius-pill);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+button.btn-danger:hover {
+  background-color: #c0392b;
+  color: white;
+}
+
+/* Small outline edit button */
+a.btn-outline-primary {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--light-tan);
+  background: white;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+a.btn-outline-primary:hover {
+  border-color: var(--soft-orange);
+  color: var(--soft-orange);
+}
+
+/* ── Navbar ──────────────────────────────────────────────── */
+.navbar {
+  background-color: var(--warm-brown) !important;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.navbar-brand {
+  font-family: 'Lora', serif;
+  font-size: 1.2rem;
+  color: var(--cream) !important;
+}
+
+.nav-link {
+  color: rgba(250, 247, 242, 0.85) !important;
+  font-size: 0.9rem;
+}
+.nav-link:hover {
+  color: var(--cream) !important;
+}
+
+/* ── Flash messages ──────────────────────────────────────── */
+.alert-danger {
+  background-color: #fde8d8;
+  border-color: #f0c4a8;
+  color: #b85c2a;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.alert-success {
+  background-color: #dceedd;
+  border-color: #b8d9bb;
+  color: #3a6e3e;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Cards (post cards on board) ─────────────────────────── */
+.post-card {
+  background: white;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-md);
+  padding: 1.3rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.post-card:hover {
+  box-shadow: 0 4px 20px rgba(92, 61, 46, 0.1);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Category badges ─────────────────────────────────────── */
+.post-card-category,
+.post-category {
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  width: fit-content;
+}
+.cat-event        { background: #fde8d8; color: #b85c2a; }
+.cat-club         { background: #dceedd; color: #3a6e3e; }
+.cat-announcement { background: #e2ddf5; color: #5a4a8a; }
+
+/* ── Tag chips ───────────────────────────────────────────── */
+.tag-chip,
+.post-card-tag,
+.post-tag {
+  background: var(--light-tan);
+  color: var(--warm-brown);
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.78rem;
+  display: inline-block;
+}
+
+.tag-chip {
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.tag-chip:hover,
+.tag-chip.active {
+  background: var(--soft-orange);
+  color: white;
+}
+
+/* ── Form sections (create/edit pages) ───────────────────── */
+.form-section {
+  background: white;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-md);
+  padding: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.form-section-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-mid);
+  margin-bottom: 1rem;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+/* ── Tag pill input (create form) ────────────────────────── */
+.tag-input-wrap {
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+  background: var(--cream);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  cursor: text;
+  transition: border-color 0.15s;
+  margin-bottom: 0.9rem;
+}
+.tag-input-wrap:focus-within {
+  border-color: var(--soft-orange);
+}
+
+.tag-pill {
+  background: var(--light-tan);
+  color: var(--warm-brown);
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.6rem;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.tag-pill .remove-tag {
+  cursor: pointer;
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.tag-pill .remove-tag:hover { color: #c0392b; }
+
+#tag-text-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  min-width: 120px;
+  color: var(--text-dark);
+  padding: 0.1rem 0;
+  width: auto;
+}
+
+.tag-hint {
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  margin-top: -0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Category selector buttons (create form) ─────────────── */
+.category-group {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.cat-btn {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem;
+  border: 1.5px solid var(--light-tan);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: var(--cream);
+  color: var(--text-mid);
+  transition: all 0.15s;
+  user-select: none;
+}
+.cat-btn.selected {
+  border-color: var(--soft-orange);
+  background: #fde8d8;
+  color: var(--warm-brown);
+  font-weight: 500;
+}
+.cat-btn input { display: none; }
+
+/* ── Recurring toggle ────────────────────────────────────── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-dark);
+}
+.toggle-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--soft-orange);
   margin: 0;
+}
+
+/* ── Board layout ────────────────────────────────────────── */
+.board-header {
+  padding: 2.5rem 0 1rem;
+  border-bottom: 2px solid var(--light-tan);
+  margin-bottom: 1.5rem;
+}
+
+.board-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.board-header p {
+  color: var(--text-mid);
+  font-size: 0.95rem;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Filter bar ──────────────────────────────────────────── */
+.filter-bar {
+  background: white;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.filter-bar select,
+.filter-bar input {
+  font-size: 0.85rem;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.9rem;
+  background: var(--cream);
+  color: var(--text-dark);
+  outline: none;
+  cursor: pointer;
+  width: auto;
+}
+.filter-bar select:focus,
+.filter-bar input:focus {
+  border-color: var(--soft-orange);
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  font-weight: 500;
+}
+
+/* ── Post detail page ────────────────────────────────────── */
+.post-wrap {
+  max-width: 680px;
+  margin: 2.5rem auto 3rem;
+}
+
+.back-link {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+.back-link:hover { color: var(--soft-orange); }
+
+.post-title {
+  font-size: 2rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+  line-height: 1.25;
+}
+
+.post-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--light-tan);
+}
+
+.post-body {
+  font-size: 0.97rem;
+  color: var(--text-dark);
+  line-height: 1.75;
+  margin-bottom: 1.8rem;
   white-space: pre-wrap;
 }
 
-/* Form button styling */
-button.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.8rem;
 }
 
-button.btn-success {
-  background-color: #28a745;
-  color: white;
+/* ── Social card (post detail) ───────────────────────────── */
+.social-card {
+  background: white;
+  border: 1px solid var(--light-tan);
+  border-radius: var(--radius-md);
+  padding: 1.3rem;
+  margin-bottom: 1.5rem;
 }
 
-button.btn-success:hover {
-  background-color: #218838;
+.social-card-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-mid);
+  margin-bottom: 1rem;
 }
 
-a.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  padding: 10px 20px;
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 500;
   text-decoration: none;
-  border-radius: 6px;
-  margin-left: 10px;
+  transition: opacity 0.15s;
+  border: 1.5px solid transparent;
+}
+.social-link:hover { opacity: 0.8; text-decoration: none; }
+
+.link-instagram { background: #fde8d8; color: #b85c2a; border-color: #f0c4a8; }
+.link-groupchat { background: #dceedd; color: #3a6e3e; border-color: #b8d9bb; }
+.link-email     { background: var(--light-tan); color: var(--warm-brown); border-color: #d8d0c4; }
+
+/* ── Author row (post detail) ────────────────────────────── */
+.author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--light-tan);
 }
 
-a.btn-secondary:hover {
-  background-color: #5a6268;
+.author-info {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+}
+.author-info a {
+  color: var(--warm-brown);
+  text-decoration: none;
+  font-weight: 500;
+}
+.author-info a:hover { color: var(--soft-orange); }
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-mid);
+  grid-column: 1 / -1;
+}
+.empty-state p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Create / edit page wrapper ──────────────────────────── */
+.create-wrap {
+  max-width: 640px;
+  margin: 2.5rem auto 3rem;
+}
+
+.create-wrap .subtitle {
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  margin-bottom: 1.8rem;
+}
+
+/* ── Post card internals ─────────────────────────────────── */
+.post-card-title {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.post-card-meta {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.post-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.post-card-social {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: auto;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--light-tan);
+}
+
+.post-card-social a {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.post-card-social a:hover { color: var(--soft-orange); }
+
+.post-card-author {
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  margin-top: auto;
+}
+
+/* ── Existing note-box (kept for compatibility) ───────────── */
+.note-box {
+  background: #fff;
+  border-left: 5px solid var(--soft-orange);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.note-box p {
+  margin: 0;
+  white-space: pre-wrap;
 }
