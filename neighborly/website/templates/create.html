@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Create Post — Neighborly{% endblock %}
+
+{% block content %}
+
+<div class="create-wrap">
+  <h2>Create a Post</h2>
+  <p class="subtitle">Share an event, club, or announcement with your community.</p>
+
+  <form method="POST" action="/create">
+
+    <!-- Category -->
+    <div class="form-section">
+      <div class="form-section-title">What kind of post?</div>
+      <div class="category-group">
+        <label class="cat-btn" id="cat-event">
+          <input type="radio" name="category" value="event" required> 🎭 Event
+        </label>
+        <label class="cat-btn" id="cat-club">
+          <input type="radio" name="category" value="club"> 🏃 Club
+        </label>
+        <label class="cat-btn" id="cat-announcement">
+          <input type="radio" name="category" value="announcement"> 📢 Announcement
+        </label>
+      </div>
+    </div>
+
+    <!-- Basic info -->
+    <div class="form-section">
+      <div class="form-section-title">Details</div>
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title" placeholder="e.g. Open Mic Night" required />
+
+      <label for="body">Description</label>
+      <textarea name="body" id="body" placeholder="Tell people what this is about..." required></textarea>
+    </div>
+
+    <!-- Location -->
+    <div class="form-section">
+      <div class="form-section-title">Location</div>
+      <label for="location_name">Venue name</label>
+      <input type="text" name="location_name" id="location_name" placeholder="e.g. Riverside Park" />
+      <div class="two-col">
+        <div>
+          <label for="location_city">City</label>
+          <input type="text" name="location_city" id="location_city" placeholder="Oak Park" />
+        </div>
+        <div>
+          <label for="location_zip">ZIP code</label>
+          <input type="text" name="location_zip" id="location_zip" placeholder="60302" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Date & time -->
+    <div class="form-section">
+      <div class="form-section-title">When</div>
+      <div class="two-col">
+        <div>
+          <label for="event_date">Date</label>
+          <input type="date" name="event_date" id="event_date" />
+        </div>
+        <div>
+          <label for="event_time">Time</label>
+          <input type="time" name="event_time" id="event_time" />
+        </div>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" name="is_recurring" id="is_recurring"
+               onchange="document.getElementById('recurring-day-wrap').style.display = this.checked ? 'block' : 'none'" />
+        <label for="is_recurring" style="margin:0;">This repeats weekly</label>
+      </div>
+      <div id="recurring-day-wrap">
+        <label for="event_day">Which day?</label>
+        <select name="event_day" id="event_day">
+          <option value="">Select a day</option>
+          <option value="monday">Monday</option>
+          <option value="tuesday">Tuesday</option>
+          <option value="wednesday">Wednesday</option>
+          <option value="thursday">Thursday</option>
+          <option value="friday">Friday</option>
+          <option value="saturday">Saturday</option>
+          <option value="sunday">Sunday</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Social & contact -->
+    <div class="form-section">
+      <div class="form-section-title">Social & Contact</div>
+      <label for="instagram_url">Instagram page URL</label>
+      <input type="url" name="instagram_url" id="instagram_url"
+             placeholder="https://instagram.com/yourclub" />
+
+      <label for="group_chat_url">Group chat link</label>
+      <input type="url" name="group_chat_url" id="group_chat_url"
+             placeholder="WhatsApp, Discord, GroupMe..." />
+
+      <label for="contact_email">Contact email</label>
+      <input type="email" name="contact_email" id="contact_email"
+             placeholder="hello@example.com" />
+    </div>
+
+    <!-- Tags -->
+    <div class="form-section">
+      <div class="form-section-title">Tags</div>
+      <div class="tag-input-wrap" id="tag-input-wrap" onclick="document.getElementById('tag-text-input').focus()">
+        <input type="text" id="tag-text-input" placeholder="Type a tag and press Enter..." />
+      </div>
+      <p class="tag-hint">e.g. free, outdoor, family-friendly, 18+, music</p>
+      <!-- hidden field submitted with form -->
+      <input type="hidden" name="tags" id="tags-hidden" />
+    </div>
+
+    <button type="submit" class="btn-submit">Post to Neighborly</button>
+    <a href="/" class="btn-cancel">Cancel</a>
+  </form>
+</div>
+
+<script>
+  // Category button highlight
+  document.querySelectorAll('.cat-btn input').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+      radio.parentElement.classList.add('selected');
+    });
+  });
+
+  // Tag chip input
+  const tagInput = document.getElementById('tag-text-input');
+  const tagWrap = document.getElementById('tag-input-wrap');
+  const tagsHidden = document.getElementById('tags-hidden');
+  let tags = [];
+
+  function renderTags() {
+    document.querySelectorAll('.tag-pill').forEach(p => p.remove());
+    tags.forEach(tag => {
+      const pill = document.createElement('span');
+      pill.className = 'tag-pill';
+      pill.innerHTML = `${tag} <span class="remove-tag" data-tag="${tag}">&times;</span>`;
+      tagWrap.insertBefore(pill, tagInput);
+    });
+    tagsHidden.value = tags.join(',');
+  }
+
+  tagInput.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ',') && tagInput.value.trim()) {
+      e.preventDefault();
+      const val = tagInput.value.trim().toLowerCase().replace(/,/g, '');
+      if (val && !tags.includes(val)) { tags.push(val); renderTags(); }
+      tagInput.value = '';
+    }
+    if (e.key === 'Backspace' && !tagInput.value && tags.length) {
+      tags.pop(); renderTags();
+    }
+  });
+
+  tagWrap.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-tag')) {
+      tags = tags.filter(t => t !== e.target.dataset.tag);
+      renderTags();
+    }
+  });
+</script>
+{% endblock %}

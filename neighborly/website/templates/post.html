@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — Neighborly{% endblock %}
+
+{% block content %}
+
+<div class="post-wrap">
+  <a href="/" class="back-link">← Back to board</a>
+
+  <span class="post-category cat-{{ post.category }}">{{ post.category }}</span>
+
+  <h1 class="post-title">{{ post.title }}</h1>
+
+  <div class="post-meta-row">
+    {% if post.event_date %}
+    <span>📅 {{ post.event_date.strftime('%A, %B %-d, %Y') }}
+      {% if post.event_time %} · {{ post.event_time.strftime('%-I:%M %p') }}{% endif %}
+    </span>
+    {% elif post.is_recurring %}
+    <span>🔁 Every {{ post.event_day | capitalize }}</span>
+    {% endif %}
+
+    {% if post.location_name or post.location_city %}
+    <span>📍
+      {% if post.location_name %}{{ post.location_name }}{% endif %}
+      {% if post.location_name and post.location_city %}, {% endif %}
+      {% if post.location_city %}{{ post.location_city }}{% endif %}
+      {% if post.location_zip %} {{ post.location_zip }}{% endif %}
+    </span>
+    {% endif %}
+
+    <span>🕐 Posted {{ post.created_at.strftime('%b %-d, %Y') }}</span>
+  </div>
+
+  <div class="post-body">{{ post.body }}</div>
+
+  {% if post.tags %}
+  <div class="post-tags">
+    {% for tag in post.tags %}
+    <span class="post-tag">{{ tag.name }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Social & contact card -->
+  {% if post.instagram_url or post.group_chat_url or post.contact_email %}
+  <div class="social-card">
+    <div class="social-card-title">Connect</div>
+    <div class="social-links">
+      {% if post.instagram_url %}
+      <a href="{{ post.instagram_url }}" target="_blank" class="social-link link-instagram">
+        <i class="fa fa-instagram"></i> Instagram
+      </a>
+      {% endif %}
+      {% if post.group_chat_url %}
+      <a href="{{ post.group_chat_url }}" target="_blank" class="social-link link-groupchat">
+        <i class="fa fa-comments"></i> Join Group Chat
+      </a>
+      {% endif %}
+      {% if post.contact_email %}
+      <a href="mailto:{{ post.contact_email }}" class="social-link link-email">
+        <i class="fa fa-envelope"></i> {{ post.contact_email }}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}
