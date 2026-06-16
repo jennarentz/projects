@@ -28,7 +28,7 @@ class Post(db.Model):
     group_chat_url = db.Column(db.String(300)) #group chat access
     contact_email = db.Column(db.String(150)) #email for who posted
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     #associate post with user
     #foreign key- must pass valid user id (one to many- user to notes)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -65,7 +65,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     #adds post id into user's post relationship (like a list)
-    posts = db.relationship('Post')
+    #posts = db.relationship('Post')
 
     #add profile for users
     username = db.Column(db.String(50), unique=True)
