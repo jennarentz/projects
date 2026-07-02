@@ -1,11 +1,11 @@
-function deleteNote(noteId) {
-    if (!confirm('Are you sure you want to delete this note?')) {
+function deletePost(postId) {
+    if (!confirm('Are you sure you want to delete this post?')) {
         return;  // cancel if not confirmed
     }
 
     fetch('/delete-note', {
         method: 'POST',
-        body: JSON.stringify({ noteId: noteId }),
+        body: JSON.stringify({ postId: postId }),
         headers: {
             'Content-Type': 'application/json'
         }
