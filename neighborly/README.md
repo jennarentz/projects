@@ -52,7 +52,7 @@ neighborly/
 
 ```bash
 git clone https://github.com/jennarentz/projects.git
-cd projects/notes-app
+cd projects/neighborly
 ```
 
 ### 2. Create a Virtual Environment
