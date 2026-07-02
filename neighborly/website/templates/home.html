@@ -14,6 +14,30 @@
   {% endif %}
 </div>
 
+<!-- Filter bar -->
+<div class="filter-bar">
+  <div class="filter-section">
+    <span class="filter-label">Category</span>
+    <div class="filter-chips">
+      <button class="filter-chip active" data-filter="category" data-value="">All</button>
+      <button class="filter-chip" data-filter="category" data-value="event">🎭 Event</button>
+      <button class="filter-chip" data-filter="category" data-value="club">🏃 Club</button>
+      <button class="filter-chip" data-filter="category" data-value="announcement">📢 Announcement</button>
+    </div>
+  </div>
+  {% if tags %}
+  <div class="filter-section">
+    <span class="filter-label">Tags</span>
+    <div class="filter-chips">
+      <button class="filter-chip active" data-filter="tag" data-value="">All</button>
+      {% for tag in tags %}
+      <button class="filter-chip" data-filter="tag" data-value="{{ tag.name }}">{{ tag.name }}</button>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
 <!-- Posts grid -->
 <div class="posts-grid" id="posts-grid">
   {% if posts %}
@@ -79,5 +103,34 @@
   </div>
   {% endif %}
 </div>
+
+<script>
+  // Filter state
+  const activeFilters = { category: '', tag: '' };
+ 
+  // Chip click handler
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const filterType = chip.dataset.filter;
+      const value = chip.dataset.value;
+ 
+      // Update active chip in this group
+      chip.closest('.filter-chips').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+ 
+      activeFilters[filterType] = value;
+      applyFilters();
+    });
+  });
+ 
+  function applyFilters() {
+    document.querySelectorAll('.post-card').forEach(card => {
+      const categoryMatch = !activeFilters.category || card.dataset.category === activeFilters.category;
+      const cardTags = card.dataset.tags ? card.dataset.tags.split(',') : [];
+      const tagMatch = !activeFilters.tag || cardTags.includes(activeFilters.tag);
+      card.style.display = (categoryMatch && tagMatch) ? '' : 'none';
+    });
+  }
+</script>
 
 {% endblock %}

@@ -3,7 +3,7 @@ function deletePost(postId) {
         return;  // cancel if not confirmed
     }
 
-    fetch('/delete-note', {
+    fetch('/delete-post', {
         method: 'POST',
         body: JSON.stringify({ postId: postId }),
         headers: {
