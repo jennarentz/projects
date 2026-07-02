@@ -95,10 +95,28 @@ def edit_post(id):
         post.category = request.form.get('category')
         post.location_city = request.form.get('location_city')
         post.location_zip = request.form.get('location_zip')
+        post.location_name = request.form.get('location_name')
+        post.event_date = request.form.get('event_date') or None
+        post.event_day = request.form.get('event_day')
+        post.event_time = request.form.get('event_time') or None
+        post.is_recurring = request.form.get('is_recurring') == 'on'
         post.instagram_url = request.form.get('instagram_url')
         post.group_chat_url = request.form.get('group_chat_url')
+        post.contact_email = request.form.get('contact_email')
+        tag_names = request.form.get('tags', '').split(',')
+        post.tags = []
+        for name in tag_names:
+            name = name.strip().lower()
+            if name:
+                tag = Tag.query.filter_by(name=name).first()
+                if not tag:
+                    tag = Tag(name=name)
+                    db.session.add(tag)
+                post.tags.append(tag)
         db.session.commit()
         flash("Post updated!", category='success')
-
-    return render_template('edit_post.html', user=current_user, post=post)
+        return redirect(url_for('views.home'))
+    
+    tag_string = ','.join(t.name for t in post.tags)
+    return render_template('edit_post.html', user=current_user, post=post, tag_string=tag_string)
 

@@ -1,16 +1,163 @@
 {% extends "base.html" %}
-<!-- enters a new page when edit post is clicked-->
-{% block title %}Edit Post{% endblock %}
+{% block title %}Edit Post — Neighborly{% endblock %}
 
 {% block content %}
-<h2 align="center">Edit Post</h2>
-<form method="POST">
-    <textarea name="note" class="form-control" rows="5" required>{{ note.text }}</textarea>
-    <br />
-    <div align="center">
-        <button type="submit" class="btn btn-success">Save Changes</button>
-        <!-- sends back to home page without edits -->
-        <a href="{{ url_for('views.home') }}" class="btn btn-secondary">Cancel</a>
+
+<div class="create-wrap">
+  <h2>Edit Post</h2>
+  <p class="subtitle">Update your post below.</p>
+
+  <form method="POST" action="/edit-post/{{ post.id }}">
+
+    <!-- Category -->
+    <div class="form-section">
+      <div class="form-section-title">What kind of post?</div>
+      <div class="category-group">
+        <label class="cat-btn" id="cat-event">
+          <input type="radio" name="category" value="event" {% if post.category == 'event' %}checked{% endif %} required> 🎭 Event
+        </label>
+        <label class="cat-btn" id="cat-club">
+          <input type="radio" name="category" value="club" {% if post.category == 'club' %}checked{% endif %}> 🏃 Club
+        </label>
+        <label class="cat-btn" id="cat-announcement">
+          <input type="radio" name="category" value="announcement" {% if post.category == 'announcement' %}checked{% endif %}> 📢 Announcement
+        </label>
+      </div>
     </div>
-</form>
+
+    <!-- Basic info -->
+    <div class="form-section">
+      <div class="form-section-title">Details</div>
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title" placeholder="e.g. Open Mic Night" value="{{ post.title }}" required />
+
+      <label for="body">Description</label>
+      <textarea name="body" id="body" placeholder="Tell people what this is about..." required>{{ post.body }}</textarea>
+    </div>
+
+    <!-- Location -->
+    <div class="form-section">
+      <div class="form-section-title">Location</div>
+      <label for="location_name">Venue name</label>
+      <input type="text" name="location_name" id="location_name" placeholder="e.g. Riverside Park" value="{{ post.location_name or '' }}" />
+      <div class="two-col">
+        <div>
+          <label for="location_city">City</label>
+          <input type="text" name="location_city" id="location_city" placeholder="Oak Park" value="{{ post.location_city or '' }}" />
+        </div>
+        <div>
+          <label for="location_zip">ZIP code</label>
+          <input type="text" name="location_zip" id="location_zip" placeholder="60302" value="{{ post.location_zip or '' }}" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Date & time -->
+    <div class="form-section">
+      <div class="form-section-title">When</div>
+      <div class="two-col">
+        <div>
+          <label for="event_date">Date</label>
+          <input type="date" name="event_date" id="event_date" value="{{ post.event_date.isoformat() if post.event_date else '' }}" />
+        </div>
+        <div>
+          <label for="event_time">Time</label>
+          <input type="time" name="event_time" id="event_time" value="{{ post.event_time.strftime('%H:%M') if post.event_time else '' }}" />
+        </div>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" name="is_recurring" id="is_recurring"
+               {% if post.is_recurring %}checked{% endif %}
+               onchange="document.getElementById('recurring-day-wrap').style.display = this.checked ? 'block' : 'none'" />
+        <label for="is_recurring" style="margin:0;">This repeats weekly</label>
+      </div>
+      <div id="recurring-day-wrap" style="display: {{ 'block' if post.is_recurring else 'none' }}">
+        <label for="event_day">Which day?</label>
+        <select name="event_day" id="event_day">
+          <option value="">Select a day</option>
+          {% for day in ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] %}
+          <option value="{{ day }}" {% if post.event_day == day %}selected{% endif %}>{{ day | capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <!-- Social & contact -->
+    <div class="form-section">
+      <div class="form-section-title">Social & Contact</div>
+      <label for="instagram_url">Instagram page URL</label>
+      <input type="url" name="instagram_url" id="instagram_url"
+             placeholder="https://instagram.com/yourclub" value="{{ post.instagram_url or '' }}" />
+
+      <label for="group_chat_url">Group chat link</label>
+      <input type="url" name="group_chat_url" id="group_chat_url"
+             placeholder="WhatsApp, Discord, GroupMe..." value="{{ post.group_chat_url or '' }}" />
+
+      <label for="contact_email">Contact email</label>
+      <input type="email" name="contact_email" id="contact_email"
+             placeholder="hello@example.com" value="{{ post.contact_email or '' }}" />
+    </div>
+
+    <!-- Tags -->
+    <div class="form-section">
+      <div class="form-section-title">Tags</div>
+      <div class="tag-input-wrap" id="tag-input-wrap" onclick="document.getElementById('tag-text-input').focus()">
+        <input type="text" id="tag-text-input" placeholder="Type a tag and press Enter..." />
+      </div>
+      <p class="tag-hint">e.g. free, outdoor, family-friendly, 18+, music</p>
+      <!-- hidden field submitted with form -->
+      <input type="hidden" name="tags" id="tags-hidden" value="{{ tag_string }}" />
+    </div>
+
+    <button type="submit" class="btn-submit">Save Changes</button>
+    <a href="/" class="btn-cancel">Cancel</a>
+  </form>
+</div>
+
+<script>
+  // Category button highlight
+  document.querySelectorAll('.cat-btn input').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+      radio.parentElement.classList.add('selected');
+    });
+  });
+
+  // Tag chip input
+  const tagInput = document.getElementById('tag-text-input');
+  const tagWrap = document.getElementById('tag-input-wrap');
+  const tagsHidden = document.getElementById('tags-hidden');
+  let tags = tagsHidden.value ? tagsHidden.value.split(',').map(t => t.trim()).filter(Boolean) : [];
+  renderTags();
+
+  function renderTags() {
+    document.querySelectorAll('.tag-pill').forEach(p => p.remove());
+    tags.forEach(tag => {
+      const pill = document.createElement('span');
+      pill.className = 'tag-pill';
+      pill.innerHTML = `${tag} <span class="remove-tag" data-tag="${tag}">&times;</span>`;
+      tagWrap.insertBefore(pill, tagInput);
+    });
+    tagsHidden.value = tags.join(',');
+  }
+
+  tagInput.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ',') && tagInput.value.trim()) {
+      e.preventDefault();
+      const val = tagInput.value.trim().toLowerCase().replace(/,/g, '');
+      if (val && !tags.includes(val)) { tags.push(val); renderTags(); }
+      tagInput.value = '';
+    }
+    if (e.key === 'Backspace' && !tagInput.value && tags.length) {
+      tags.pop(); renderTags();
+    }
+  });
+
+  tagWrap.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-tag')) {
+      tags = tags.filter(t => t !== e.target.dataset.tag);
+      renderTags();
+    }
+  });
+</script>
 {% endblock %}
